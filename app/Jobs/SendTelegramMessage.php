@@ -7,20 +7,24 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Support\Facades\Log;
+use Telegram\Bot\Laravel\Facades\Telegram;
 
 class SendTelegramMessage implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    var $message;
+    var $to;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($to,$message)
     {
-        //
+        $this->message = $message;
+        $this->to = $to;
     }
 
     /**
@@ -30,6 +34,12 @@ class SendTelegramMessage implements ShouldQueue
      */
     public function handle()
     {
-        Log::info('hello world');
+
+        Telegram::sendMessage([
+            'chat_id' => $this->to,
+            'text' => $this->message,
+        ]);
+
+
     }
 }
